@@ -1,0 +1,126 @@
+<app-loading [show]="
+		addMutate.isPending() || updateMutate.isPending() || detailQuery.isFetching() || updateStatusMutate.isPending()
+	" [onTop]="true" />
+
+<p-card>
+	<ng-template pTemplate="header">
+		<div class="px-4 pt-6 flex items-center gap-3">
+			<div class="flex-1 flex items-center gap-3">
+				<p class="font-bold text-2xl">
+					{{ this.id() == 0 ? 'Thêm mới mã giảm giá' : 'Cập nhật mã giảm giá' }}
+				</p>
+
+				<p-chip *ngIf="
+						this.id() > 0 &&
+						detailQuery.data()?.data?.status !== undefined &&
+						status[detailQuery.data()?.data?.status!]
+					" [label]="status[detailQuery.data()?.data?.status!].label" />
+			</div>
+
+			<ng-container *ngIf="this.id() > 0 && detailQuery.data()?.data?.status !== undefined">
+				<div *ngIf="![0, 2].includes(detailQuery.data()?.data?.status!)"
+					class="px-3 py-2 bg-gray-500 hover:bg-gray-600 text-white cursor-pointer rounded-md"
+					(click)="onSubmit(0)">
+					Chuyển về nháp
+				</div>
+
+				<div *ngIf="![1, 2].includes(detailQuery.data()?.data?.status!)"
+					class="px-3 py-2 bg-yellow-500 hover:bg-yellow-600 text-white cursor-pointer rounded-md"
+					(click)="onSubmit(1)">
+					Duyệt
+				</div>
+
+				<div *ngIf="![0, 2].includes(detailQuery.data()?.data?.status!)"
+					class="px-3 py-2 bg-red-500 hover:bg-red-600 text-white cursor-pointer rounded-md"
+					(click)="onSubmit(2)">
+					Hủy bỏ
+				</div>
+			</ng-container>
+
+			<div *ngIf="![1, 2, 4].includes(detailQuery.data()?.data?.status!)"
+				class="px-3 py-2 bg-green-500 hover:bg-green-600 text-white cursor-pointer rounded-md"
+				(click)="onSubmit()">
+				{{ this.id() == 0 ? 'Thêm mới' : 'Cập nhật' }}
+			</div>
+		</div>
+	</ng-template>
+
+	<div class="grid grid-cols-3 gap-5"
+		[style.pointerEvents]="this.id() > 0 && detailQuery.data()?.data?.status !== 0 ? 'none' : 'auto'">
+		<div class="col-span-3">
+			<app-input-radio-multi name="coupon-type" layout="3" [options]="[
+					{
+						label: 'Giảm theo giá tiền',
+						value: 0
+					},
+					{
+						label: 'Giảm theo phần trăm',
+						value: 1
+					}
+				]" label="Loại giảm giá" [required]="true" [value]="detailQuery.data()?.data?.type || form.type"
+				[errorMessage]="errors()['type']" [disabled]="this.id() > 0 && detailQuery.data()?.data?.status !== 0"
+				(onChange)="form.type = $event.value" />
+		</div>
+
+		<div class="col-span-3">
+			<app-input-radio-multi name="apply-for" layout="3" [options]="[
+					{
+						label: 'Áp dụng cho 1 khách hàng',
+						value: 1
+					},
+					{
+						label: 'Áp dụng cho tất cả',
+						value: 0
+					}
+				]" label="Áp dụng cho đối tượng" [required]="true" [value]="detailQuery.data()?.data?.typeC! || form.typeC"
+				[errorMessage]="errors()['typeC']" [disabled]="this.id() > 0 && detailQuery.data()?.data?.status !== 0"
+				(onChange)="form.typeC = $event.value" />
+		</div>
+
+		<app-input-text-component label="Mã mã giảm giá" placeholder="Mã mã giảm giá" [required]="true"
+			[disabled]="this.id() > 0" [value]="detailQuery.data()?.data?.internalCode"
+			[errorMessage]="errors()['internalCode']" (onChange)="form.internalCode = $event" />
+
+		<app-input-text-component label="Tên mã giảm giá" placeholder="Tên mã giảm giá" [required]="true"
+			[value]="detailQuery.data()?.data?.name" [errorMessage]="errors()['name']"
+			[disabled]="this.id() > 0 && detailQuery.data()?.data?.status !== 0" (onChange)="form.name = $event" />
+
+		<app-input-date-component label="Ngày bắt đầu" placeholder="Ngày bắt đầu" [required]="true"
+			[value]="detailQuery.data()?.data?.start" [errorMessage]="errors()['start']"
+			(onChange)="form.start = $event.toDateString()" />
+
+		<app-input-price-component *ngIf="form.type === 0" label="Số tiền giảm" placeholder="Số tiền giảm"
+			[disabled]="this.id() > 0 && detailQuery.data()?.data?.status !== 0"
+			[value]="detailQuery.data()?.data?.discount" [errorMessage]="errors()['discount']"
+			(onChange)="form.discount = $event" [required]="true" />
+
+		<app-input-number-component *ngIf="form.type === 0" label="Phần trăm giảm tối đa"
+			placeholder="Phần trăm giảm tối đa" [required]="true"
+			[disabled]="this.id() > 0 && detailQuery.data()?.data?.status !== 0"
+			[value]="detailQuery.data()?.data?.percentMax" [errorMessage]="errors()['percentMax']"
+			(onChange)="form.percentMax = $event" />
+
+		<app-input-number-component *ngIf="form.type === 1" label="Phần trăm giảm" placeholder="Phần trăm giảm"
+			[value]="detailQuery.data()?.data?.percent" [errorMessage]="errors()['percent']" [required]="true"
+			[disabled]="this.id() > 0 && detailQuery.data()?.data?.status !== 0" (onChange)="form.percent = $event" />
+
+		<app-input-price-component *ngIf="form.type === 1" label="Số tiền giảm tối đa" placeholder="Số tiền giảm tối đa"
+			[value]="detailQuery.data()?.data?.discountMax" [errorMessage]="errors()['discountMax']"
+			[disabled]="this.id() > 0 && detailQuery.data()?.data?.status !== 0" [required]="true"
+			(onChange)="form.discountMax = $event" />
+
+		<app-input-date-component label="Ngày kết thúc" placeholder="Ngày kết thúc" [required]="true"
+			[value]="detailQuery.data()?.data?.end" [errorMessage]="errors()['end']"
+			(onChange)="form.end = $event.toDateString()" />
+
+		<app-input-number-component label="Giới hạn số lượng" placeholder="Giới hạn số lượng"
+			[disabled]="(this.id() > 0 && detailQuery.data()?.data?.status !== 0) || form.typeC === 1"
+			[value]="form.typeC === 1 ? 1 : detailQuery.data()?.data?.limit" [errorMessage]="errors()['limit']"
+			(onChange)="form.limit = $event" [required]="true" />
+
+		<app-input-dialog-select *ngIf="form.typeC === 1" label="Khách hàng" placeholder="Khách hàng" api="customer"
+			[value]="detailQuery.data()?.data?.customerId" [columns]="customerColumns"
+			dialogHeader="Danh sách khách hàng" valueField="id" labelField="name" dialogWidth="80vw"
+			(onChange)="form.customerId = $event.id" />
+	</div>
+</p-card>

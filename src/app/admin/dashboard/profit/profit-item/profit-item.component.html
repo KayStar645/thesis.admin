@@ -1,0 +1,44 @@
+<ng-container *ngIf="data.items; else product">
+	<p-accordion>
+		<p-accordionTab
+			headerStyleClass="p-3 mb-3"
+			contentStyleClass="p-0"
+		>
+			<ng-template pTemplate="header">
+				<p
+					class="w-fit"
+					[ngClass]="{
+                            'font-semibold': data.items,
+                        }"
+				>
+					{{ data.name }}
+				</p>
+			</ng-template>
+
+			<ng-container>
+				<div class="pl-8">
+					<app-profit-item
+						*ngFor="let item of data.items"
+						[data]="item"
+					/>
+				</div>
+			</ng-container>
+		</p-accordionTab>
+	</p-accordion>
+</ng-container>
+
+<ng-template #product>
+	<div class="py-2">
+		<a
+			routerLink="/admin/master-data/product/form"
+			[queryParams]="{
+				id: data.id
+			}"
+			class="cursor-pointer hover:text-green-600 hover:underline text-lg"
+		>
+			{{ data.name }}
+
+			<i class="ml-2 text-xs fa-solid fa-arrow-up-right-from-square fa-fw"></i>
+		</a>
+	</div>
+</ng-template>

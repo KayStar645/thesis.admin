@@ -1,0 +1,80 @@
+@import url('./assets/styles/apexchart.scss');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	body {
+		@apply relative z-1 bg-white font-sans text-base font-normal text-black h-screen overflow-hidden scroll-smooth;
+	}
+}
+
+.p-checkbox .p-checkbox-box,
+.p-radiobutton .p-radiobutton-box {
+	border: 2px solid #d1d5db !important;
+}
+
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+	background: #eff6ff !important;
+	border-color: #eff6ff !important;
+	color: #1d4ed8 !important;
+}
+
+.ck-rounded-corners .ck.ck-editor__editable:not(.ck-editor__nested-editable),
+.ck.ck-editor__editable.ck-rounded-corners:not(.ck-editor__nested-editable) {
+	height: auto;
+	min-height: 300px;
+	max-height: 700px;
+	border: 1px solid #ccc;
+}
+
+.is_height_auto > .ck-rounded-corners .ck.ck-editor__editable:not(.ck-editor__nested-editable),
+.is_height_auto > .ck.ck-editor__editable.ck-rounded-corners:not(.ck-editor__nested-editable) {
+	height: unset !important;
+	min-height: unset !important;
+	max-height: unset !important;
+}
+
+.is_height_auto > .editor_toolbar {
+	display: none;
+}
+
+.ck.ck-reset.ck-editor.ck-rounded-corners .todo-list li {
+	padding-left: 32px;
+}
+
+.ck.ck-dropdown {
+	white-space: nowrap;
+}
+
+.ck.ck-button,
+a.ck.ck-button {
+	gap: 4px;
+}
+
+.ck.ck-icon.ck-icon_inherit-color,
+.ck.ck-icon.ck-icon_inherit-color * {
+	font-size: 10px;
+}
+
+.ck.ck-toolbar > .ck-toolbar__items > :not(.ck-toolbar__line-break),
+.ck.ck-toolbar > .ck.ck-toolbar__grouped-dropdown {
+	margin: 0;
+	padding: 0;
+}
+
+.ck.ck-toolbar.ck-toolbar_grouping > .ck-toolbar__items {
+	gap: 4px;
+}
+
+.menu-active {
+	background-color: #66bb6a;
+	color: white;
+}
+
+.p-datepicker-title,
+.p-monthpicker-month {
+	font-size: 14px;
+}

@@ -1,0 +1,73 @@
+<app-loading [onTop]="true" [show]="isLoading"></app-loading>
+<p-dialog header="Lọc dữ liệu" [(visible)]="visible" [modal]="true" [style]="{ width: '30vw', height: '40vw' }"
+    [closable]="true" (onHide)="closeModal()" class="filter-dialog">
+    <form [formGroup]="filterForm" class="p-4">
+        <div class="space-y-6">
+            <div class="form-group">
+                <label for="date" class="block text-sm font-medium text-gray-700 mb-2">Ngày</label>
+                <p-calendar formControlName="date" [inline]="true" [showWeek]="true" dateFormat="dd/mm/yy"
+                    [showButtonBar]="true" styleClass="w-full">
+                </p-calendar>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber" class="block text-sm font-medium text-gray-700 mb-2">Số điện thoại</label>
+                <input id="phoneNumber" type="text" formControlName="phoneNumber" placeholder="Nhập số điện thoại"
+                    class="block w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div class="form-group">
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Trạng thái</label>
+                <select id="status" formControlName="needsApproval"
+                    class="block w-full p-2 border border-gray-300 rounded-md">
+                    <option [value]="-1">Tất cả</option>
+
+                    <ng-container *ngFor="let option of statusOrderOptions; let first = first">
+                        <option *ngIf="!first" [value]="option.id">{{ option.label }}</option>
+                    </ng-container>
+                </select>
+            </div>
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+            <button
+                class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-md text-sm font-medium transition-colors duration-300"
+                (click)="closeModal()">
+                Hủy
+            </button>
+            <button
+                class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md text-sm font-medium transition-colors duration-300"
+                (click)="applyFilter()">
+                Áp dụng
+            </button>
+        </div>
+    </ng-template>
+</p-dialog>
+
+<style>
+    .filter-dialog .p-dialog-content {
+        padding: 0;
+    }
+
+    .filter-dialog .p-dialog-header {
+        padding: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .filter-dialog .p-calendar {
+        width: 100%;
+    }
+
+    .filter-dialog .p-datepicker {
+        border: none;
+        box-shadow: none;
+    }
+
+    .filter-dialog .p-datepicker .p-datepicker-header {
+        padding: 0.5rem;
+    }
+
+    .filter-dialog .p-datepicker table {
+        font-size: 0.875rem;
+    }
+</style>

@@ -1,0 +1,168 @@
+<table class="w-full my-0 e border-neutral-200" (change)="(data)">
+	<thead class="bg-greenlighten-1">
+		<tr>
+			<th class="h-full items-center flex justify-center p-3 border-r-2" *ngIf="isShowEditRemove">
+				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"
+					xmlns:xlink="http://www.w3.org/1999/xlink">
+					<rect width="20" height="20" fill="url(#pattern0_146_440)" />
+
+					<defs>
+						<pattern id="pattern0_146_440" patternContentUnits="objectBoundingBox" width="1" height="1">
+							<use xlink:href="#image0_146_440" transform="scale(0.0333333)" />
+						</pattern>
+						<image id="image0_146_440" width="30" height="30"
+							xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAX0lEQVR4nO3TMQ6AIBBE0a28uss9BY/xiVkrQmGBa+G8kmYC4ZuJDIANKEADKuDXmb2NGBp5xnCbDJ8Zw3UyfHz11HvW5/L75nmf639Qx0Edr4c6zoI6Dup4PdSx2DMd4HWVJcgHlT0AAAAASUVORK5CYII=" />
+					</defs>
+				</svg>
+			</th>
+
+			<ng-container *ngIf="!customCol">
+				<ng-container *ngFor="let column of columns; let last = last" (changes)="(columns)">
+					<th scope="col" *ngIf="!last && isShowCheckBox"
+						class="text-white pl-auto px-3 py-2 text-1 border-r-2 tracking-wider text-center">
+						{{ column.title }}
+					</th>
+					<th scope="col" *ngIf="!isShowCheckBox"
+						class="text-white pl-auto px-3 py-2 text-1 border-r-2 tracking-wider text-center">
+						{{ column.title }}
+					</th>
+				</ng-container>
+			</ng-container>
+
+			<ng-container>
+				<ng-container *ngFor="let column of customColumns; let last = last" (changes)="(customColumns)">
+					<th scope="col" *ngIf="!last && isShowCheckBox"
+						class="text-white pl-auto px-3 py-2 text-1 border-r-2 tracking-wider text-center">
+						{{ column.title }}
+					</th>
+					<th scope="col" *ngIf="!isShowCheckBox"
+						class="text-white pl-auto px-3 py-2 text-1 border-r-2 tracking-wider text-center">
+						{{ column.title }}
+					</th>
+				</ng-container>
+			</ng-container>
+
+			<ng-container *ngIf="isCheckBox && isShowCheckBox">
+				<th scope="col" *ngIf="isShowCheckBox"
+					class="px-6 py-2 text-left text-1 font-medium uppercase tracking-wider w-10">
+					<label>
+						<input type="checkbox" class="w-4 h-4 rounded-sm checkbox bg-white"
+							(change)="toggleCheckboxes($event)" />
+					</label>
+				</th>
+			</ng-container>
+
+			<ng-container *ngIf="isInputText">
+				<th scope="col" class="w-20 text-white pl-auto px-3 py-2 text-left text-1 border-r-2 tracking-wider">
+					{{ labelInputNumber }}
+				</th>
+				<th scope="col" class="w-20 text-white pl-auto px-3 py-2 text-left text-1 border-r-2 tracking-wider">
+					{{ labelInputPrice }}
+				</th>
+			</ng-container>
+
+			<ng-container *ngIf="!isCheckBox && isShowCheckBox">
+				<th scope="col" *ngIf="isShowCheckBox"
+					class="px-6 py-2 text-left text-1 font-medium text-blue-500 uppercase tracking-wider w-10">
+					<input id="bordered-checkbox-1" type="radio" name="bordered-checkbox" class="w-5 h-5"
+						(change)="toggleCheckboxes($event)" #Radio />
+				</th>
+			</ng-container>
+		</tr>
+	</thead>
+
+	<tbody>
+		<tr *ngFor="let item of data" class="bg-white text-black text-1 hover:bg-gray-100">
+			<th scope="row" class="border-b-4 w-10 px-3 py-3" *ngIf="isShowEditRemove">
+				<div class="flex h-full justify-center items-center space-x-2 m-auto text-gray-900 whitespace-nowrap">
+					<div *ngFor="let action of actions; let last = last">
+						<app-button-image-component valueClass="w-5" valueButton=""
+							*ngIf="!last && removeDelete && !removeEdit"
+							(buttonClicked)="handleRowAction(action.name, item, $event)"
+							[svgContent]="action.icon"></app-button-image-component>
+						<app-button-image-component valueClass="w-12" valueButton="" *ngIf="removeDelete == false"
+							(buttonClicked)="handleRowAction(action.name, item, $event)"
+							[svgContent]="action.icon"></app-button-image-component>
+					</div>
+				</div>
+			</th>
+
+			<ng-container *ngIf="customCol === false">
+				<ng-container *ngFor="let column of columns; let last = last; let first = first" (changes)="(columns)">
+					<td *ngIf="!last && isShowCheckBox" class="border-b-4 px-3 py-3">
+						{{ item[column.key] }}
+					</td>
+					<td *ngIf="!isShowCheckBox" class="border-b-4 px-3 py-3">
+						{{ item[column.key] }}
+					</td>
+				</ng-container>
+			</ng-container>
+
+			<ng-container *ngIf="customCol === true">
+				<ng-container *ngFor="let col of customColumns; let last = last; let first = first"
+					(changes)="(customColumns)">
+					<td *ngIf="!last && isShowCheckBox" class="border-b-4 px-3 py-3" [ngClass]="col.class">
+						{{ col.getter(item) }}
+					</td>
+					<td *ngIf="!isShowCheckBox" class="border-b-4 px-3 py-3" [ngClass]="col.class">
+						{{ col.getter(item) }}
+					</td>
+				</ng-container>
+			</ng-container>
+
+			<ng-container *ngIf="isInputText">
+				<td scope="col" *ngIf="customCol === true"
+					class="border-b-4 px-6 py-1 text-left text-1 font-medium text-gray-500 uppercase tracking-wider">
+					<app-input-number-component id="number" name="number"
+						(onChange)="handleChangeInputNumber($event.toString())"
+						(change)="handleChangeInputID(customColumns[customColumns.length - 5].getter(item))" />
+				</td>
+				<td scope="col" *ngIf="customCol === true"
+					class="border-b-4 px-6 py-1 text-left text-1 font-medium text-gray-500 uppercase tracking-wider">
+					<app-input-price-component id="number" name="number"
+						(onChange)="handleChangeInputPrice($event.toString())"
+						(change)="handleChangeInputID(customColumns[customColumns.length - 5].getter(item))" />
+				</td>
+			</ng-container>
+
+			<ng-container *ngIf="isCheckBox">
+				<td scope="col" *ngIf="customCol === true && isShowCheckBox"
+					class="border-b-4 w-10 px-6 py-1 text-left text-1 font-medium text-gray-500 uppercase tracking-wider">
+					<label>
+						<input type="checkbox" class="w-4 h-4 rounded-sm checkbox bg-gray-200"
+							(change)="handleChangeCheck($event, item)"
+							[ngModel]="customColumns[customColumns.length - 1].getter(item) || item?.isChecked" />
+					</label>
+				</td>
+				<td scope="col" *ngIf="customCol === false && isShowCheckBox"
+					class="border-b-4 w-10 px-6 py-1 text-left text-1 font-medium text-gray-500 uppercase tracking-wider">
+					<label>
+						<input type="checkbox" class="w-4 h-4 rounded-sm checkbox bg-gray-200"
+							(change)="handleChangeCheck($event, item)"
+							[(ngModel)]="item[columns[columns.length - 1].key]" />
+					</label>
+				</td>
+			</ng-container>
+
+			<ng-container *ngIf="!isCheckBox">
+				<td scope="col" *ngIf="customCol === true && isShowCheckBox"
+					class="border-b-4 w-10 px-6 py-1 text-left text-1 font-medium text-gray-500 uppercase tracking-wider">
+					<input id="bordered-checkbox-1" type="radio" name="bordered-checkbox"
+						(change)="handleChangeCheck($event, item)" class="w-5 h-5"
+						[checked]="customColumns[customColumns.length - 1].getter(item)" #Radio />
+				</td>
+				<td scope="col" *ngIf="customCol === false && isShowCheckBox"
+					class="border-b-4 w-10 px-6 py-1 text-left text-1 font-medium text-gray-500 uppercase tracking-wider">
+					<input id="bordered-checkbox-1" type="radio" name="bordered-checkbox" class="w-5 h-5"
+						(change)="handleChangeCheck($event, item)" [checked]="item[columns[columns.length - 1].key]"
+						#Radio />
+				</td>
+			</ng-container>
+		</tr>
+	</tbody>
+</table>
+
+<div class="flex justify-end" *ngIf="shouldPagination">
+	<p-paginator [alwaysShow]="false" [rows]="pageSize" [first]="first" [totalRecords]="totalCount"
+		(onPageChange)="handlePageChange($event)" />
+</div>

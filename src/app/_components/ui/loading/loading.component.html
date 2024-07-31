@@ -1,0 +1,14 @@
+<div
+	*ngIf="show"
+	class="top-0 left-0 bottom-0 right-0 bg-stone-800/50 z-99999 flex items-center justify-center"
+	[ngClass]="{
+		'absolute': !onTop,
+		'fixed': onTop,
+	}"
+>
+	<p-progressSpinner
+		styleClass="w-12 h-12"
+		strokeWidth="5"
+		animationDuration=".5s"
+	/>
+</div>

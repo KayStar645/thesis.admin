@@ -1,0 +1,83 @@
+<app-loading
+	[onTop]="true"
+	[show]="detailQuery.isFetching() || addMutate.isPending() || updateMutate.isPending()"
+/>
+
+<p-dialog
+	header="Header"
+	[visible]="true"
+	[modal]="true"
+	[style]="{ width: '80vw' }"
+	[closable]="false"
+>
+	<ng-template pTemplate="header">
+		<div class="inline-flex align-items-center justify-content-center gap-2">
+			<span class="font-bold white-space-nowrap">
+				{{ id > 0 ? 'Cập nhật loại sản phẩm' : 'Thêm mới loại sản phẩm' }}
+			</span>
+		</div>
+	</ng-template>
+
+	<div class="grid grid-cols-3 gap-5">
+		<app-input-text-component
+			label="Mã loại sản phẩm"
+			placeholder="Mã loại sản phẩm"
+			[required]="true"
+			[disabled]="id > 0"
+			[value]="detailQuery.data()?.data?.internalCode"
+			[errorMessage]="errors()['internalCode']"
+			(onChange)="form.internalCode = $event"
+		/>
+
+		<app-input-text-component
+			label="Tên loại sản phẩm"
+			placeholder="Tên loại sản phẩm"
+			[required]="true"
+			[value]="detailQuery.data()?.data?.name"
+			[errorMessage]="errors()['name']"
+			(onChange)="form.name = $event"
+		/>
+
+		<app-input-dialog-select
+			label="Nhóm cha"
+			placeholder="Nhóm cha"
+			dialogHeader="Danh sách nhóm sản phẩm"
+			labelField="name"
+			valueField="id"
+			api="category"
+			dialogWidth="80vw"
+			[columns]="categoryColumns"
+			[value]="detailQuery.data()?.data?.parentId"
+			[errorMessage]="errors()['parentId']"
+			(onChange)="form.parentId = $event.id"
+		/>
+
+		<div class="col-span-3">
+			<app-input-file-component
+				label="Ảnh"
+				placeholder="Ảnh"
+				[folder]="id > 0 ? 'category/' + id : 'category/new'"
+				[value]="detailQuery.data()?.data?.icon ? [detailQuery.data()?.data?.icon!] : []"
+				(onChange)="form.icon = $event[0] || ''"
+			/>
+		</div>
+	</div>
+
+	<ng-template pTemplate="footer">
+		<div class="flex items-center justify-end gap-3">
+			<div
+				class="px-3 py-2 bg-gray-500 hover:bg-gray-600 cursor-pointer rounded-md text-sm font-semibold text-white"
+				(click)="_onCancel()"
+			>
+				Hủy
+			</div>
+
+			<div
+				class="px-3 py-2 bg-green-500 hover:bg-green-600 cursor-pointer rounded-md text-sm font-semibold text-white"
+				(click)="onSubmit()"
+			>
+				Xác nhận
+			</div>
+		</div>
+	</ng-template>
+</p-dialog>

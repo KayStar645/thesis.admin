@@ -1,0 +1,73 @@
+<app-loading
+	[onTop]="true"
+	[show]="profitQuery.isFetching() || profitDetailQuery.isFetching()"
+/>
+
+<div class="flex flex-col gap-5">
+	<app-banner-component [breadcrumbs]="breadcrumbs" />
+
+	<div class="grid grid-cols-3 gap-3">
+		<app-input-number-component
+			label="Đơn vị"
+			placeholder="Đơn vị"
+			[value]="util"
+			(onChange)="onChangeUtil($event)"
+		/>
+
+		<app-input-date-component
+			label="Tháng năm"
+			placeholder="Tháng năm"
+			view="month"
+			format="mm/yy"
+			[value]="date.toDateString()"
+			(onChange)="date = $event"
+		/>
+
+		<div class="flex justify-end items-center">
+			<div
+				class="rounded-md bg-green-500 hover:bg-green-600 cursor-pointer text-white px-4 h-[41.6px] flex items-center"
+				(click)="profitQuery.refetch()"
+			>
+				Tìm kiếm
+			</div>
+		</div>
+	</div>
+
+	<app-generic-table-component
+		[data]="this.profitQuery.data()?.data || []"
+		[customColumns]="columns"
+		[customCol]="true"
+		[isShowCheckBox]="false"
+		[isShowAllDelete]="false"
+		[removeDelete]="true"
+		(rowAction)="handleRowAction($event)"
+	/>
+</div>
+
+<p-sidebar
+	[visible]="!!selected()"
+	position="right"
+	(onHide)="selected.set(undefined)"
+	[style]="{
+		width: '50vw'
+	}"
+	[showCloseIcon]="false"
+>
+	<div class="flex flex-col gap-5">
+		<div class="flex items-center justify-between">
+			<p class="font-semibold text-xl">Thứ tự: {{ selected()?.id }}</p>
+
+			<div class="flex items-center font-semibold text-xl gap-1">
+				<p>Tổng lợi nhuận:</p>
+				<p class="text-green-600">{{ selected()?.profit?.toLocaleString('vi-VL') }}đ</p>
+			</div>
+		</div>
+
+		<div class="flex flex-col gap-1">
+			<app-profit-item
+				*ngFor="let item of profitDetailQuery.data()?.data?.items || []; index as i"
+				[data]="item"
+			/>
+		</div>
+	</div>
+</p-sidebar>

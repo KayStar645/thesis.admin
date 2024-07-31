@@ -1,0 +1,111 @@
+<p-dialog [header]="dialogHeader" [(visible)]="visible" [modal]="true"
+    [style]="{ width: dialogWidth, minHeight: '50vh' }" [closable]="true" (onHide)="closeDialog()">
+    <app-loading [show]="detailQuery.isFetching() || updateStatusMutate.isPending()" [onTop]="true" />
+
+    <p-card>
+        <ng-template pTemplate="header">
+            <div class="px-4 pt-6 flex items-center gap-3">
+                <div class="flex-1 flex items-center gap-3">
+                    <p class="font-bold text-2xl">Thông tin đơn hàng</p>
+
+                    <p-chip *ngIf="
+						this.id > 0 &&
+						detailQuery.data()?.data?.status !== undefined &&
+						status[detailQuery.data()?.data?.status!]
+					" [label]="status[detailQuery.data()?.data?.status!].label" />
+                </div>
+
+                <ng-container *ngIf="this.id > 0 && detailQuery.data()?.data?.status !== undefined">
+                    <div *ngIf="![2, 3, 4, 5].includes(detailQuery.data()?.data?.status!)"
+                        class="px-3 py-2 bg-yellow-500 hover:bg-yellow-600 text-white cursor-pointer rounded-md"
+                        (click)="onSubmit(2)">
+                        Duyệt
+                    </div>
+
+                    <div *ngIf="![1, 3, 4, 5].includes(detailQuery.data()?.data?.status!)"
+                        class="px-3 py-2 bg-orange-500 hover:bg-orange-600 text-white cursor-pointer rounded-md"
+                        (click)="onSubmit(3)">
+                        Vận chuyển
+                    </div>
+
+                    <!-- <div
+					*ngIf="![1, 2, 4, 5].includes(detailQuery.data()?.data?.status!)"
+					class="px-3 py-2 bg-slate-800 hover:bg-slate-800 text-white cursor-pointer rounded-md"
+					(click)="onSubmit(4)"
+				>
+					Đã nhận
+				</div> -->
+                </ng-container>
+            </div>
+        </ng-template>
+
+        <div class="grid grid-cols-3 gap-5">
+            <app-input-text-component label="Mã đơn hàng" [disabled]="true"
+                [value]="detailQuery.data()?.data?.internalCode" />
+
+            <app-input-text-component label="Ngày tạo" [disabled]="true"
+                [value]="formatDate(detailQuery.data()?.data?.date!)" />
+
+            <app-input-text-component label="Khách hàng" [disabled]="true"
+                [value]="detailQuery.data()?.data?.customer?.name" />
+
+            <app-input-price-component label="Tổng tiền" [disabled]="true" [value]="detailQuery.data()?.data?.total" />
+
+            <app-input-price-component label="Số tiền giảm" [disabled]="true"
+                [value]="detailQuery.data()?.data?.totalDecrease" />
+
+            <app-input-price-component label="Thành tiền" [disabled]="true"
+                [value]="detailQuery.data()?.data?.totalAmount" />
+
+            <app-input-text-component *ngIf="detailQuery.data()?.data?.staffApproved" label="Nhân viên thao tác"
+                [disabled]="true" [value]="detailQuery.data()?.data?.staffApproved?.name" />
+
+            <div class="col-span-3">
+                <app-textarea label="Lời nhắn" [disabled]="true" [value]="detailQuery.data()?.data?.message" />
+            </div>
+
+            <div class="col-span-3">
+                <label class="block mb-3 text-sm w-fit"> Danh sách sản phẩm </label>
+
+                <table class="table-auto w-full my-0 align-middle border-neutral-200 border-collapse">
+                    <thead class="bg-greenlighten-1">
+                        <tr>
+                            <th class="p-3 border-r-2 text-white text-center">Mã sản phẩm
+                            </th>
+                            <th class="p-3 border-r-2 text-white text-center">Tên sản phẩm</th>
+                            <th class="p-3 border-r-2 text-white text-center">Số lượng</th>
+                            <th class="p-3 border-r-2 text-white text-center">Giá</th>
+                            <th class="p-3 border-r-2 text-white text-center">Giá giảm</th>
+                            <th class="p-3 border-r-2 text-white text-center">Đơn giá</th>
+
+                            <th class="p-3 border-r-2 text-white text-center">Tổng tiền</th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let item of detailQuery.data()?.data?.details; index as i"
+                            class="hover:bg-green-50 cursor-pointer">
+                            <td class="align-middle border-b-4 px-3 py-3 text-center">{{ item.product.internalCode }}
+                            </td>
+                            <td class="align-middle border-b-4 px-3 py-3">{{ item.product.name }}</td>
+                            <td class="align-middle border-b-4 px-3 py-3 text-center">{{ item.quantity }}</td>
+                            <td class="align-middle border-b-4 px-3 py-3 text-right">
+                                {{ item.cost.toLocaleString('vi-VN') }}đ
+                            </td>
+                            <td class="align-middle border-b-4 px-3 py-3 text-right">
+                                {{ item.reducedPrice.toLocaleString('vi-VN') }}đ
+                            </td>
+                            <td class="align-middle border-b-4 px-3 py-3 text-right">
+                                {{ item.price.toLocaleString('vi-VN') }}đ
+                            </td>
+                            <td class="align-middle border-b-4 px-3 py-3 text-right">
+                                {{ (item.quantity * (item.cost - item.reducedPrice)).toLocaleString('vi-VN') }}đ
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </p-card>
+</p-dialog>

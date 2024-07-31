@@ -1,0 +1,36 @@
+<app-loading [show]="addMutate.isPending() || updateMutate.isPending() || detailQuery.isLoading()" [onTop]="true" />
+
+<p-card>
+	<ng-template pTemplate="header">
+		<div class="px-4 pt-6 flex items-center gap-3">
+			<p class="font-bold text-2xl flex-1">
+				{{ this.id() == 0 ? 'Thêm mới vị trí' : 'Cập nhật vị trí' }}
+			</p>
+
+			<div class="px-3 py-2 bg-green-500 hover:bg-green-600 text-white cursor-pointer rounded-md"
+				(click)="onSubmit()">
+				{{ this.id() == 0 ? 'Thêm mới' : 'Cập nhật' }}
+			</div>
+		</div>
+	</ng-template>
+
+	<div class="grid grid-cols-3 gap-5">
+		<app-input-text-component label="Mã vị trí" placeholder="Mã vị trí" [required]="true" [disabled]="this.id() > 0"
+			[value]="detailQuery.data()?.data?.internalCode" [errorMessage]="errors()['internalCode']"
+			(onChange)="form.internalCode = $event" />
+
+		<app-input-text-component label="Tên vị trí" placeholder="Tên vị trí" [required]="true"
+			[value]="detailQuery.data()?.data?.name" [errorMessage]="errors()['name']"
+			(onChange)="form.name = $event" />
+
+		<app-input-dialog-select-multi label="Vai trò" placeholder="Vai trò" dialogHeader="Danh sách vai trò" api="role"
+			valueField="id" labelField="name" [columns]="roleColumns" [value]="detailQuery.data()?.data?.roles ||  []"
+			[errorMessage]="errors()['roles']" (onChange)="form.roles = $event" />
+
+		<div class="col-span-3">
+			<app-input-editor-component label="Mô tả" placeholder="Mô tả" [required]="true"
+				[value]="detailQuery.data()?.data?.describes" [errorMessage]="errors()['describes']"
+				(onChange)="form.describes = $event" />
+		</div>
+	</div>
+</p-card>

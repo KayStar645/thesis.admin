@@ -1,0 +1,38 @@
+// Light or Dark
+$light-background: #66bb6a;
+$light-foreground: #c9c9c9;
+$light-border: #e5e7eb;
+$dark-background: #241c51;
+$dark-foreground: #bbbace;
+$dark-border: #2b245b;
+
+// Color
+$white-color: #fff;
+$black-color: #000;
+
+$green: #4CAF50;
+$green-lighten-1: #66BB6A;
+$green-lighten-2: #81C784;
+$green-lighten-3: #A5D6A7;
+$green-lighten-4: #C8E6C9;
+$green-lighten-5: #E8F5E9;
+$green-darken-1: #43A047;
+$green-darken-2: #388E3C;
+$green-darken-3: #2E7D32;
+$green-darken-4: #1B5E20;
+$green-accent-1: #B9F6CA;
+$green-accent-2: #69F0AE;
+$green-accent-3: #00E676;
+$green-accent-4: #00C853;
+
+
+$box-shadow-color: rgba(0, 0, 0, 0.3);
+
+.bg-light {
+    background-color: $light-background !important;
+}
+
+.text-green-lighten-1 {
+    color: $green-lighten-1 !important;
+}
+

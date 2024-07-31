@@ -1,0 +1,24 @@
+<div ngClass="{{ valueClass }}">
+	<label
+		[for]="name"
+		class="peer-focus:font-medium text-sm text-gray-500"
+	>
+		{{ labelTime }}
+		<span
+			*ngIf="required"
+			class="text-red-500"
+			>*</span
+		></label
+	>
+	<input
+		type="datetime-local"
+		[id]="name"
+		(input)="onChange($event)"
+		[value]="value"
+		class="block py-1 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+		placeholder=" "
+		(focusout)="handleValueFocusOut()"
+		ngModel="{{ value }}"
+		required
+	/>
+</div>

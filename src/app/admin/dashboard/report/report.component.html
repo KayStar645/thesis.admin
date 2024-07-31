@@ -1,0 +1,178 @@
+<app-loading
+	[show]="query.isFetching() || exportFile"
+	[onTop]="true"
+/>
+<div class="flex flex-col gap-5">
+	<app-banner-component [breadcrumbs]="breadcrumbs" />
+
+	<div class="grid grid-cols-3 gap-3">
+		<app-input-number-component
+			label="Đơn vị"
+			placeholder="Đơn vị"
+			[value]="util"
+			(onChange)="onChangeUtil($event)"
+		/>
+
+		<app-input-date-component
+			label="Tháng năm"
+			placeholder="Tháng năm"
+			view="month"
+			format="mm/yy"
+			[value]="date.toDateString()"
+			(onChange)="date = $event"
+		/>
+
+		<div class="flex justify-end items-center gap-3">
+			<div
+				class="rounded-md bg-green-500 hover:bg-green-600 cursor-pointer text-white px-4 h-[41.6px] flex items-center"
+				(click)="query.refetch()"
+			>
+				Tìm kiếm
+			</div>
+
+			<div
+				(click)="onReport()"
+				class="rounded-md bg-green-500 hover:bg-green-600 cursor-pointer text-white px-4 h-[41.6px] flex items-center"
+			>
+				Xuất File
+			</div>
+		</div>
+	</div>
+
+	<div #body>
+		<div class="bg-black p-2">
+			<div class="flex items-center">
+				<img
+					src="assets/images/login/logo2.png"
+					alt=""
+					class="w-10 h-10"
+					srcset=""
+				/>
+
+				<p class="text-teal-400 font-bold text-3xl">{{ query.data()?.data?.companyName }}</p>
+			</div>
+
+			<p class="mt-2 text-white text-lg">{{ query.data()?.data?.address }}</p>
+		</div>
+
+		<div class="border border-black py-2 flex flex-col justify-center items-center gap-3">
+			<p class="font-bold text-3xl">{{ query.data()?.data?.name }}</p>
+			<p class="text-lg">{{ query.data()?.data?.time }}</p>
+			<p class="text-lg">Người tạo: {{ query.data()?.data?.createBy }}</p>
+		</div>
+
+		<div class="px-2 py-3 bg-black">
+			<p class="text-teal-400 font-bold text-xl">TỔNG QUAN</p>
+		</div>
+
+		<div class="border border-black">
+			<div class="flex items-center border border-gray-200">
+				<p class="w-70 font-semibold text-xl bg-teal-200 px-2 py-3">Tổng doanh thu</p>
+				<p class="font-semibold text-xl text-right flex-1 pr-2">
+					{{ query.data()?.data?.revenue?.toLocaleString('vi-VN') }}đ
+				</p>
+			</div>
+
+			<div class="flex items-center border border-gray-200">
+				<p class="w-70 font-semibold text-xl bg-teal-200 px-2 py-3">Tổng chi phí</p>
+				<p class="font-semibold text-xl text-right flex-1 pr-2">
+					{{ query.data()?.data?.expense?.toLocaleString('vi-VN') }}đ
+				</p>
+			</div>
+
+			<div class="flex items-center border border-gray-200">
+				<p class="w-70 font-semibold text-xl bg-teal-200 px-2 py-3">Tổng lợi nhuận</p>
+				<p class="font-semibold text-xl text-right flex-1 pr-2">
+					{{ query.data()?.data?.profit?.toLocaleString('vi-VN') }}đ
+				</p>
+			</div>
+		</div>
+
+		<table class="w-full border-collapse">
+			<thead>
+				<tr>
+					<th class="px-2 py-3 text-center border border-gray-200 text-nowrap bg-gray-100 text-lg">Nhóm</th>
+					<th class="px-2 py-3 text-center border border-gray-200 text-nowrap bg-gray-100 text-lg">
+						Tên mục
+					</th>
+					<th class="px-2 py-3 text-center border border-gray-200 text-nowrap bg-gray-100 text-lg">
+						Số lượng bán
+					</th>
+					<th class="px-2 py-3 text-center border border-gray-200 text-nowrap bg-gray-100 text-lg">
+						Doanh thu
+					</th>
+					<th class="px-2 py-3 text-center border border-gray-200 text-nowrap bg-gray-100 text-lg">
+						Chi phí
+					</th>
+					<th class="px-2 py-3 text-center border border-gray-200 text-nowrap bg-gray-100 text-lg">
+						Lợi nhuận
+					</th>
+					<th class="px-2 py-3 text-center border border-gray-200 text-nowrap bg-gray-100 text-lg">
+						Lợi nhuận nhóm
+					</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr *ngFor="let row of data(); index as i">
+					<td
+						class="px-2 py-3 border border-gray-200 align-middle text-lg text-center"
+						*ngIf="row.item.rowSpan"
+						[rowSpan]="row.item.rowSpan"
+					>
+						{{ i }}
+					</td>
+
+					<td
+						[ngClass]="{
+							'bg-green-50': row.item.isCategory
+						}"
+						class="px-2 py-3 border border-gray-200 align-middle text-lg"
+					>
+						{{ row.item.name }}
+					</td>
+					<td
+						[ngClass]="{
+							'bg-green-50': row.item.isCategory
+						}"
+						class="px-2 py-3 border border-gray-200 align-middle text-lg text-center"
+					>
+						{{ row.item.sellNumber }}
+					</td>
+					<td
+						[ngClass]="{
+							'bg-green-50': row.item.isCategory
+						}"
+						class="px-2 py-3 border border-gray-200 align-middle text-lg text-right"
+					>
+						{{ row.item.revenue.toLocaleString('vi-VN') }}đ
+					</td>
+					<td
+						[ngClass]="{
+							'bg-green-50': row.item.isCategory
+						}"
+						class="px-2 py-3 border border-gray-200 align-middle text-lg text-right"
+					>
+						{{ row.item.expense.toLocaleString('vi-VN') }}đ
+					</td>
+					<td
+						[ngClass]="{
+							'bg-green-50': row.item.isCategory
+						}"
+						class="px-2 py-3 border border-gray-200 align-middle text-lg text-right"
+					>
+						{{ row.item.profit.toLocaleString('vi-VN') }}đ
+					</td>
+
+					<td
+						class="px-2 py-3 border border-gray-200 align-middle text-lg text-right"
+						*ngIf="row.item.rowSpan"
+						[rowSpan]="row.item.rowSpan"
+					>
+						{{ row.groupProfits.toLocaleString('vi-VN') }}đ
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

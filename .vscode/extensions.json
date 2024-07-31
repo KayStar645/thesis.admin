@@ -1,0 +1,19 @@
+{
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=827846
+	"recommendations": [
+		"angular.ng-template",
+		"formulahendry.auto-close-tag",
+		"formulahendry.auto-rename-tag",
+		"streetsidesoftware.code-spell-checker",
+		"mikestead.dotenv",
+		"dbaeumer.vscode-eslint",
+		"ms-vscode.vscode-typescript-next",
+		"Zignd.html-css-class-completion",
+		"esbenp.prettier-vscode",
+		"christian-kohler.path-intellisense",
+		"christian-kohler.npm-intellisense",
+		"YoavBls.pretty-ts-errors",
+		"bradlc.vscode-tailwindcss",
+		"angular.ng-template"
+	]
+}

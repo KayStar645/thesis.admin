@@ -1,0 +1,42 @@
+<label
+	*ngIf="label"
+	class="block mb-3 text-sm w-fit"
+>
+	{{ label }}
+
+	<span
+		*ngIf="required"
+		class="text-red-500"
+	>
+		*
+	</span>
+</label>
+
+<div class="grid grid-cols-{{ layout }} gap-5 bg-slate-50 rounded-md px-3 h-[41.6px] border border-r-gray-200">
+	<label
+		*ngFor="let item of options"
+		class="flex items-center gap-2 hover:text-gray-900 w-fit text-sm cursor-pointer"
+		[ngClass]="{
+			'text-gray-900': item[valueField] === formattedValue,
+			'text-gray-400': item[valueField] !== formattedValue
+		}"
+	>
+		<input
+			type="radio"
+			[name]="name"
+			[value]="item[valueField]"
+			[checked]="item[valueField] == formattedValue"
+			(change)="_onChange(item)"
+		/>
+		<p>
+			{{ item[labelField] }}
+		</p>
+	</label>
+</div>
+
+<p
+	*ngIf="errorMessage"
+	class="text-rose-500 text-xs mt-2"
+>
+	{{ errorMessage }}
+</p>

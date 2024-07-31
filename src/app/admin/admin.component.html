@@ -1,0 +1,17 @@
+<app-navbar-component></app-navbar-component>
+
+<div class="flex">
+	<div
+		class="w-80 overflow-auto"
+		style="height: calc(100vh - 64px)"
+	>
+		<app-slidebar-component></app-slidebar-component>
+	</div>
+
+	<div
+		class="flex-1 p-5 overflow-auto"
+		style="height: calc(100vh - 64px)"
+	>
+		<router-outlet></router-outlet>
+	</div>
+</div>

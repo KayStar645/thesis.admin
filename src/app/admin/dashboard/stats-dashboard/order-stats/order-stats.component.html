@@ -1,0 +1,39 @@
+<div class="card p-4 ">
+    <form [formGroup]="formGroup" class="mb-4">
+        <div class="flex flex-wrap items-center gap-4">
+            <p-selectButton [options]="stateOptions" [(ngModel)]="value" [ngModelOptions]="{standalone: true}"
+                optionLabel="label" optionValue="value" (onChange)="onTimePeriodChange()" class="hover-effect">
+            </p-selectButton>
+
+            <p-dropdown formControlName="selectedYear" [options]="years" optionLabel="label" optionValue="value"
+                placeholder="Select a Year" (onChange)="onYearChange()" [style]="{'width':'150px'}"
+                class="hover-effect">
+            </p-dropdown>
+
+            <p-dropdown *ngIf="value === 'month'" formControlName="selectedMonth" [options]="months" optionLabel="label"
+                optionValue="value" placeholder="Select a Month" (onChange)="onMonthChange()"
+                [style]="{'width':'150px'}" class="hover-effect">
+            </p-dropdown>
+        </div>
+    </form>
+
+    <div class="chart-container" style="height: 100%;">
+        <p-chart type="bar" [data]="basicData" [options]="basicOptions" height="40vh"></p-chart>
+    </div>
+    <hr class="pt-3 m-4">
+    <div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">THỐNG KẾ DOANH THU</h3>
+
+        <app-revenue-stats> </app-revenue-stats>
+    </div>
+</div>
+<style>
+    /* CSS để tạo hiệu ứng hover */
+    .hover-effect {
+        transition: background-color 0.3s ease;
+    }
+
+    .hover-effect:hover {
+        background-color: #f0f0f0;
+    }
+</style>

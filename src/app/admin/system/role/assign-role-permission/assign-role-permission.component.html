@@ -1,0 +1,74 @@
+<app-loading
+	[show]="
+		roleUpdateMutate.isPending() ||
+		roleAddMutate.isPending() ||
+		roleQuery.isFetching() ||
+		roleDetailQuery.isFetching()
+	"
+	[onTop]="true"
+/>
+
+<div class="sticky top-0 bg-white flex gap-2 z-10 items-end pb-2">
+	<div class="flex-1">
+		<app-input-text-component
+			label="Tên vai trò"
+			[value]="role.name || ''"
+			(onChange)="role.name = $event"
+		/>
+	</div>
+
+	<div
+		class="px-3 py-2 bg-blue-700 text-white rounded-md cursor-pointer hover:bg-blue-800"
+		(click)="onSave()"
+	>
+		{{ role.id > 0 ? 'Cập nhật' : 'Thêm mới' }}
+	</div>
+</div>
+
+<div class="mt-8">
+	<p-accordion
+		*ngFor="let permission of permissions"
+		[multiple]="true"
+		styleClass="mb-4"
+	>
+		<p-accordionTab
+			headerStyleClass="px-3 py-4 border border-gray-200"
+			iconPos="end"
+			contentStyleClass="p-0"
+		>
+			<ng-template pTemplate="header">
+				<span class="flex align-items-center gap-2 w-full justify-between">
+					<p class="font-normal white-space-nowrap">{{ permission.name }}</p>
+
+					<div class="flex items-center gap-1 mr-3">
+						<p-chip
+							*ngFor="let permissionItem of permission.permissionsShortcut"
+							[label]="permissionItem"
+							styleClass="text-xs"
+						/>
+					</div>
+				</span>
+			</ng-template>
+
+			<div class="grid grid-cols-2 gap-3 border border-gray-200 border-t-0 p-4 rounded-b-md">
+				<div
+					class="flex items-center gap-2 basis-1/2"
+					*ngFor="let permissionItem of permission.permissions"
+				>
+					<p-checkbox
+						[(ngModel)]="permissionItem.active"
+						[binary]="true"
+						[inputId]="permission.name + permissionItem.name"
+						(onChange)="onCheck(permission, permissionItem, $event.checked)"
+					/>
+
+					<label
+						[for]="permission.name + permissionItem.name"
+						class="cursor-pointer"
+						>{{ permissionItem.name }}</label
+					>
+				</div>
+			</div>
+		</p-accordionTab>
+	</p-accordion>
+</div>

@@ -1,0 +1,108 @@
+<app-loading [onTop]="true" [show]="
+		detailQuery.isFetching() ||
+		supplierOrderDetailQuery.isFetching() ||
+		updateMutate.isPending() ||
+		updateStatusMutate.isPending()
+	" />
+
+<p-card>
+	<ng-template pTemplate="header">
+		<div class="px-4 pt-6 flex items-center gap-3">
+			<div class="flex-1 flex items-center gap-3">
+				<p class="font-bold text-2xl">
+					{{ this.id() == 0 ? 'Thêm mới hóa đơn nhập' : 'Cập nhật hóa đơn nhập' }}
+				</p>
+
+				<p-chip *ngIf="
+						this.id() > 0 &&
+						detailQuery.data()?.data?.status !== undefined &&
+						status[detailQuery.data()?.data?.status!]
+					" [label]="status[detailQuery.data()?.data?.status!].label" />
+			</div>
+			<div *ngIf="id() == 0"
+				class="px-3 py-2 bg-green-500 hover:bg-green-600 text-white cursor-pointer rounded-md"
+				(click)="onSubmit()">
+				Thêm mới
+			</div>
+		</div>
+	</ng-template>
+
+	<div class="grid grid-cols-3 gap-5" [ngClass]="{
+			'pointer-events-none': id() > 0 && detailQuery.data()?.data?.status
+		}">
+		<app-input-text-component *ngIf="id() > 0" label="Mã đơn nhập" [value]="detailQuery.data()?.data?.internalCode"
+			[disabled]="true" />
+
+		<app-input-text-component *ngIf="id() > 0" label="Ngày tạo đơn" placeholder="Ngày tạo đơn"
+			[value]="formatDate(detailQuery.data()?.data?.bookingDate!)" [disabled]="true" />
+
+		<app-input-text-component *ngIf="id() > 0" label="Nhân viên tạo"
+			[value]="detailQuery.data()?.data?.approveStaff?.name" [disabled]="true" />
+
+		<app-input-text-component *ngIf="id() > 0" label="Nhà cung cấp"
+			[value]="detailQuery.data()?.data?.distributor?.name" [disabled]="true" />
+
+		<app-input-text-component *ngIf="id() > 0" label="Tổng tiền"
+			[value]="detailQuery.data()?.data?.total?.toLocaleString('vi-VN') + 'đ'" [disabled]="true" />
+
+		<app-input-text-component label="Nhân viên giao hàng" placeholder="Nhân viên giao hàng" [required]="true"
+			[value]="detailQuery.data()?.data?.receivingStaff" [errorMessage]="errors()['receivingStaff']"
+			(onChange)="onChangeStaff($event)" />
+
+		<app-input-dialog-select api="supplierOrder" [columns]="supplierOrderColumns" label="Hóa đơn đặt hàng"
+			placeholder="Hóa đơn đặt hàng" [required]="true" dialogHeader="Danh sách hóa đơn đặt hàng" valueField="id"
+			labelField="internalCode" [isAllDetail]="true" dialogWidth="80vw" sorts="-bookingdate"
+			filters="status!=0,status!=2,status!=3" [value]="detailQuery.data()?.data?.parentId"
+			[errorMessage]="errors()['supplierOrderId']" (onChange)="onChangeSupplierId($event)" />
+
+		<div class="col-span-3">
+			<app-input-dialog-select-draw-multi [columns]="productPopupColumns" label="Danh sách sản phẩm"
+				placeholder="Danh sách sản phẩm" [required]="true" [disabled]="form().supplierOrderId === -1"
+				dialogHeader="Danh sách sản phẩm đã đặt của hóa đơn" valueField="id" labelField="internalCode"
+				dialogWidth="80vw" [data]="supplierOrderDetailQuery.data()?.data || []"
+				[value]="detailQuery.data()?.data?.details || []" (onChange)="onSelectProduct($event)" />
+		</div>
+
+		<div class="col-span-3">
+			<table class="table-auto w-full my-0 align-middle border-neutral-200 border-collapse">
+				<thead class="bg-greenlighten-1">
+					<tr>
+						<th class="p-3 border-r-2 text-white text-center">Mã sản phẩm</th>
+						<th class="p-3 border-r-2 text-white text-center">Tên sản phẩm</th>
+						<th class="p-3 border-r-2 text-white text-center">Danh mục</th>
+						<th class="p-3 border-r-2 text-white text-center">Giá</th>
+						<th *ngIf="id() > 0" class="p-3 border-r-2 text-white text-center">
+							Số lượng đặt
+						</th>
+						<th class="p-3 border-r-2 text-white text-center">Đã nhập</th>
+						<th class="p-3 border-r-2 text-white text-center">Số lượng nhập</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<tr *ngFor="let item of selectedProducts; index as i" class="hover:bg-green-50 cursor-pointer">
+						<td class="align-middle border-b-4 px-3 py-3 text-center">{{ item.internalCode }}</td>
+						<td class="align-middle border-b-4 px-3 py-3">{{ item.name }}</td>
+						<td class="align-middle border-b-4 px-3 py-3">{{ item.category?.name }}</td>
+						<td class="align-middle border-b-4 px-3 py-3 text-right">
+							{{ item.price.toLocaleString('vi-VN') }}đ
+						</td>
+						<td class="align-middle border-b-4 px-3 py-3 text-center">{{ item.orderQuantity }}</td>
+						<td *ngIf="id() > 0" class="align-middle border-b-4 px-3 py-3 text-center">
+							{{ item.importQuantity }}
+						</td>
+						<td class="align-middle border-b-4 px-3 py-3 text-center w-40 z-999 relative">
+							<div *ngIf="id() > 0; else inputComponent">
+								{{ item.quantity }}
+							</div>
+							<ng-template #inputComponent>
+								<app-input-number-component [value]="0" inputClass="text-center"
+									(onChange)="onChangeItemQuantity(i, $event)"></app-input-number-component>
+							</ng-template>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</p-card>

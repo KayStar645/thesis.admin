@@ -1,0 +1,102 @@
+<label
+	*ngIf="label"
+	class="block mb-3 text-sm w-fit"
+>
+	{{ label }}
+
+	<span
+		*ngIf="required"
+		class="text-red-500"
+	>
+		*
+	</span>
+</label>
+
+<input
+	#inputFile
+	type="file"
+	[multiple]="multiple"
+	[accept]="accept"
+	[hidden]="true"
+	(input)="handleSelect($event)"
+/>
+
+<div class="relative rounded-md overflow-hidden border border-slate-20">
+	<app-loading [show]="isLoading" />
+
+	<div
+		class="flex items-center justify-between flex-1 bg-slate-50 px-3 h-[41.6px]"
+		[ngClass]="{
+			'border-b border-b-200': selectedFiles.length > 0
+		}"
+	>
+		<div class="flex items-center gap-3">
+			<div
+				class="px-3 py-1 bg-slate-500 hover:bg-slate-600 cursor-pointer rounded-md text-sm font-semibold text-white"
+				(click)="inputFile.click()"
+			>
+				Chọn file
+			</div>
+
+			<div
+				class="px-3 py-1 cursor-pointer rounded-md text-sm font-semibold text-white"
+				[ngClass]="{
+				'bg-slate-300 cursor-not-allowed': selectedFiles.length === 0,
+				'bg-sky-500 hover:bg-sky-600': selectedFiles.length > 0,
+			}"
+				(click)="onUpload()"
+			>
+				Tải lên
+			</div>
+
+			<div
+				*ngIf="multiple"
+				class="px-3 py-1 cursor-pointer bg-red-500 hover:bg-red-600 rounded-md text-sm font-semibold text-white"
+				(click)="onSelectNew()"
+			>
+				Chọn mới
+			</div>
+		</div>
+
+		<p
+			*ngIf="showAlert"
+			class="text-xs px-3 py-1 rounded-full bg-rose-500 text-white"
+		>
+			! Tệp chưa được tải lên !
+		</p>
+	</div>
+
+	<div
+		*ngIf="selectedFiles.length > 0"
+		class="flex overflow-auto gap-3 p-3 0"
+	>
+		<div
+			*ngFor="let file of selectedFiles; index as index"
+			class="relative w-fit"
+		>
+			<p-image
+				[src]="file.path"
+				alt="Image"
+				width="200"
+				class="flex items-center justify-center w-50"
+				imageClass="rounded-md drop-shadow-md"
+				[preview]="true"
+				loading="eager"
+			/>
+
+			<div
+				class="w-8 h-8 bg-gray-500 hover:bg-red-700 text-white flex items-center justify-center cursor-pointer rounded-full transition-all absolute top-2 right-2"
+				(click)="onRemove(index)"
+			>
+				<i class="fa-solid fa-xmark"></i>
+			</div>
+		</div>
+	</div>
+</div>
+
+<p
+	*ngIf="errorMessage"
+	class="text-rose-500 text-xs mt-2"
+>
+	{{ errorMessage }}
+</p>

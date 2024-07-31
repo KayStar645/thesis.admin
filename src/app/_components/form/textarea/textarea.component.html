@@ -1,0 +1,31 @@
+<label
+	*ngIf="label"
+	class="block mb-3 text-sm w-fit"
+>
+	{{ label }}
+
+	<span
+		*ngIf="required"
+		class="text-red-500"
+	>
+		*
+	</span>
+</label>
+
+<textarea
+	pInputTextarea
+	rows="1"
+	[value]="value"
+	[placeholder]="placeholder"
+	[autoResize]="true"
+	[disabled]="disabled"
+	class="px-3 py-2.5 border rounded-md focus:outline-none focus:shadow-sm w-full placeholder:text-sm text-sm bg-slate-50 border-gray-200 focus:border-green-400 focus:shadow-green-400 disabled:bg-gray-200 min-h-[41.6px]"
+	(input)="_onChange($event)"
+></textarea>
+
+<p
+	*ngIf="errorMessage"
+	class="text-rose-500 text-xs mt-2"
+>
+	{{ errorMessage }}
+</p>

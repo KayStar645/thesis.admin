@@ -1,0 +1,8 @@
+<div class="flex flex-col gap-3 p-4">
+	<app-menu-item
+		*ngFor="let item of menu"
+		[data]="item"
+		[activeItem]="active()"
+		(onClick)="onMenuItemClick($event)"
+	/>
+</div>

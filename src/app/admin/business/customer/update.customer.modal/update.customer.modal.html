@@ -1,0 +1,112 @@
+<div class="fixed z-10 inset-0 overflow-y-auto">
+	<div class="flex items-center justify-center min-h-screen px-1 pt-1 pb-10 text-center sm:block sm:p-0">
+		<div class="fixed inset-0 transition-opacity">
+			<div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+		</div>
+		<span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>
+
+		<div
+			class="inline-block align-bottom bg-white rounded-lg pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full sm:p-6">
+			<p class="text-3 font-bold py-2 text-greendarken-1">CẬP NHẬT THÔNG TIN KHÁCH HÀNG</p>
+			<hr class="mb-3" />
+			<div class="sm:flex sm:items-start">
+				<form class="max-w-lg w-full">
+					<!-- Mã số nhân viên -->
+					<div class="relative z-0 w-full group">
+						<label class="text-2 text-gray-500">Mã khách hàng</label>
+						<p class="text-1 py-2 text-black">{{idCustomer}}</p>
+					</div>
+					<div class="grid md:grid-cols-2 md:gap-6 items-center">
+						<!-- Tên nhân viên -->
+						<div class="relative z-0 w-full group">
+							<app-input-text-component compel="1" [value]="nameCustomer"
+								(onChange)="getNameCustomerChange($event)" label="Họ và tên"
+								valueClass="relative z-0 w-full mb-2 group"></app-input-text-component>
+							<div class="text-[12px] text-red-600 h-1 w-full">{{nameErrorMessage}}</div>
+						</div>
+						<!-- Giới tính -->
+						<div class="relative z-0 w-full mb-2 group">
+							<div>
+								<label for="floating_sex" class="peer-focus:font-medium text-2 text-gray-500">
+									Giới tính <span class="text-red-500">*</span></label>
+								<select #sexSelect id="floating_sex" name="floating_sex" [value]="genderCustomer"
+									(change)="onSelectChange(sexSelect.value)"
+									class="block py-1 px-0 w-full text-2 text-black bg-transparent border-0 border-b-2 border-gray-300 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+									<option class="text-1" selected value="">
+										Chọn giới tính
+									</option>
+									<option class="text-1" value="Nam">
+										Nam
+									</option>
+									<option class="text-1" value="Nữ">
+										Nữ
+									</option>
+								</select>
+							</div>
+							<div *ngIf="genderCustomer.length>0" class="text-[12px] text-red-600 max-h-3 w-full">
+								{{genderErrorMessage}}
+							</div>
+						</div>
+					</div>
+					<!-- Địa chỉ -->
+					<app-input-text-component name="address" label="Địa chỉ" compel="1" [value]="addressCustomer"
+						valueClass="relative z-0 w-full mb-1 mt-2 group"
+						(onChange)="getAddressCustomerChange($event)"></app-input-text-component>
+					<div class="text-[12px] text-red-600 h-2 mb-2 w-full">{{addressErrorMessage}}</div>
+					<div class="grid md:grid-cols-2 md:gap-6 items-center justify-center">
+						<!-- Phone -->
+						<div>
+							<app-input-number-component name="phonenumber" label="Số điện thoại " compel="1"
+								valueClass="relative z-0 w-full mb-1 group" [value]="phoneCustomer"
+								(onChange)="getPhoneNumberCustomer($event.toString())"></app-input-number-component>
+							<div class="text-[12px] text-red-600 h-2 w-full">{{phoneErrorMessage}}</div>
+						</div>
+						<!-- Email -->
+						<div>
+							<app-input-text-component name="email" label="Email" compel="1" [value]="emailCustomer"
+								valueClass="relative z-0 w-full mb-2 group"
+								(onChange)="getEmailCustomer($event)"></app-input-text-component>
+							<div class="text-[12px] text-red-600 h-2 w-full">{{emailErrorMessage}}</div>
+						</div>
+					</div>
+
+					<div class="flex-row-reverse flex">
+						<app-button-component valueButtonText="Cập nhật" (click)="onSubmit(modalTemplate)"
+							class="mx-1 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-2 w-full sm:w-auto px-5 py-2 text-center"></app-button-component>
+						<app-button-component valueButtonText="Trở về" (click)="close()"
+							valueClass="mx-1 text-gray-600 bg-white hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-2 w-full sm:w-auto px-5 py-2 text-center border border-gray-300"></app-button-component>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<ng-template #modalTemplate>
+		<div>Bạn đã thêm nhân viên {{this.idCustomer}} thành công</div>
+	</ng-template>
+
+	<script>
+		var loadFile = function (event) {
+			var input = event.target;
+			var file = input.files[0];
+			var type = file.type;
+
+			var output = document.getElementById('preview_img');
+
+			output.src = URL.createObjectURL(event.target.files[0]);
+			output.onload = function () {
+				URL.revokeObjectURL(output.src); // free memory
+			};
+		};
+	</script>
+	<script>
+		$(document).ready(function () {
+			$('#floating_date').datepicker({
+				format: 'dd/mm/yyyy',
+				autoclose: true,
+				todayHighlight: true,
+				clearBtn: true,
+				language: 'vi',
+			});
+		});
+	</script>
+</div>

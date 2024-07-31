@@ -1,0 +1,27 @@
+<label
+	*ngIf="label"
+	class="block mb-3 text-sm w-fit"
+>
+	{{ label }}
+
+	<span
+		*ngIf="required"
+		class="text-red-500"
+	>
+		*
+	</span>
+</label>
+
+<input
+	type="checkbox"
+	(input)="_onChange($event)"
+	[checked]="value"
+	autocomplete="off"
+/>
+
+<p
+	*ngIf="errorMessage"
+	class="text-rose-500 text-xs mt-2"
+>
+	{{ errorMessage }}
+</p>

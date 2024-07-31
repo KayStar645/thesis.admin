@@ -1,0 +1,173 @@
+<app-loading
+	[show]="
+		addMutate.isPending() || updateMutate.isPending() || detailQuery.isFetching() || updateStatusMutate.isPending()
+	"
+	[onTop]="true"
+/>
+
+<p-card>
+	<ng-template pTemplate="header">
+		<div class="px-4 pt-6 flex items-center gap-3">
+			<div class="flex-1 flex items-center gap-3">
+				<p class="font-bold text-2xl">
+					{{ this.id() == 0 ? 'Thêm mới sản phẩm' : 'Cập nhật sản phẩm' }}
+				</p>
+
+				<p-chip
+					*ngIf="
+						this.id() > 0 &&
+						detailQuery.data()?.data?.status !== undefined &&
+						status[detailQuery.data()?.data?.status!]
+					"
+					[label]="status[detailQuery.data()?.data?.status!].label"
+				/>
+			</div>
+
+			<ng-container *ngIf="this.id() > 0 && detailQuery.data()?.data?.status !== undefined">
+				<div
+					*ngIf="![0, 4].includes(detailQuery.data()?.data?.status!)"
+					class="px-3 py-2 bg-gray-500 hover:bg-gray-600 text-white cursor-pointer rounded-md"
+					(click)="onSubmit(0)"
+				>
+					Chuyển về nháp
+				</div>
+
+				<div
+					*ngIf="![1, 4].includes(detailQuery.data()?.data?.status!)"
+					class="px-3 py-2 bg-yellow-500 hover:bg-yellow-600 text-white cursor-pointer rounded-md"
+					(click)="onSubmit(1)"
+				>
+					Duyệt
+				</div>
+
+				<div
+					*ngIf="![0, 2, 4].includes(detailQuery.data()?.data?.status!)"
+					class="px-3 py-2 bg-orange-500 hover:bg-orange-600 text-white cursor-pointer rounded-md"
+					(click)="onSubmit(2)"
+				>
+					Tạm ngưng
+				</div>
+
+				<div
+					*ngIf="![0, 2, 3, 4].includes(detailQuery.data()?.data?.status!)"
+					class="px-3 py-2 bg-slate-800 hover:bg-slate-800 text-white cursor-pointer rounded-md"
+					(click)="onSubmit(3)"
+				>
+					Hết hàng
+				</div>
+
+				<div
+					*ngIf="![0, 4].includes(detailQuery.data()?.data?.status!)"
+					class="px-3 py-2 bg-red-500 hover:bg-red-600 text-white cursor-pointer rounded-md"
+					(click)="onSubmit(4)"
+				>
+					Dừng hoạt động
+				</div>
+			</ng-container>
+
+			<div
+				*ngIf="![1, 2, 4].includes(detailQuery.data()?.data?.status!)"
+				class="px-3 py-2 bg-green-500 hover:bg-green-600 text-white cursor-pointer rounded-md"
+				(click)="onSubmit()"
+			>
+				{{ this.id() == 0 ? 'Thêm mới' : 'Cập nhật' }}
+			</div>
+		</div>
+	</ng-template>
+
+	<div class="grid grid-cols-3 gap-5">
+		<app-input-text-component
+			label="Mã sản phẩm"
+			placeholder="Mã sản phẩm"
+			[required]="true"
+			[disabled]="this.id() > 0"
+			[value]="detailQuery.data()?.data?.internalCode"
+			[errorMessage]="errors()['internalCode']"
+			(onChange)="form.internalCode = $event"
+		/>
+
+		<app-input-text-component
+			label="Tên sản phẩm"
+			placeholder="Tên sản phẩm"
+			[required]="true"
+			[value]="detailQuery.data()?.data?.name"
+			[errorMessage]="errors()['name']"
+			[disabled]="this.id() > 0 && detailQuery.data()?.data?.status !== 0"
+			(onChange)="form.name = $event"
+		/>
+
+		<app-input-dialog-select
+			label="Loại sản phẩm"
+			placeholder="Loại sản phẩm"
+			dialogHeader="Danh sách loại sản phẩm"
+			api="category"
+			valueField="id"
+			labelField="name"
+			[required]="true"
+			[columns]="categoryColumns"
+			[value]="detailQuery.data()?.data?.categoryId"
+			[errorMessage]="errors()['categoryId']"
+			[disabled]="this.id() > 0 && detailQuery.data()?.data?.status !== 0"
+			(onChange)="form.categoryId = $event.id"
+		/>
+
+		<app-input-price-component
+			label="Giá sản phẩm"
+			placeholder="Giá sản phẩm"
+			[required]="true"
+			[disabled]="this.id() > 0 && detailQuery.data()?.data?.status !== 0"
+			[value]="detailQuery.data()?.data?.price?.toString()"
+			[errorMessage]="errors()['name']"
+			(onChange)="form.price = $event"
+		/>
+
+		<div class="col-span-3">
+			<app-input-file-component
+				label="Ảnh sản phẩm"
+				[required]="true"
+				[disabled]="this.id() > 0 && detailQuery.data()?.data?.status !== 0"
+				[multiple]="true"
+				[folder]="id() > 0 ? 'product/' + id() : 'product/new'"
+				[value]="detailQuery.data()?.data?.images || []"
+				[errorMessage]="errors()['images']"
+				(onChange)="form.images = $event"
+			/>
+		</div>
+
+		<div class="col-span-3">
+			<app-input-editor-component
+				label="Mô tả"
+				placeholder="Mô tả"
+				[required]="true"
+				[value]="detailQuery.data()?.data?.describes"
+				[errorMessage]="errors()['describes']"
+				[disabled]="this.id() > 0 && detailQuery.data()?.data?.status !== 0"
+				(onChange)="form.describes = $event"
+			/>
+		</div>
+
+		<div class="col-span-3">
+			<app-input-editor-component
+				label="Chức năng"
+				placeholder="Chức năng"
+				[required]="true"
+				[value]="detailQuery.data()?.data?.feature"
+				[errorMessage]="errors()['feature']"
+				[disabled]="this.id() > 0 && detailQuery.data()?.data?.status !== 0"
+				(onChange)="form.feature = $event"
+			/>
+		</div>
+
+		<div class="col-span-3">
+			<app-input-editor-component
+				label="Thông số kỹ thuật"
+				placeholder="Thông số kỹ thuật"
+				[required]="true"
+				[value]="detailQuery.data()?.data?.specifications"
+				[errorMessage]="errors()['specifications']"
+				[disabled]="this.id() > 0 && detailQuery.data()?.data?.status !== 0"
+				(onChange)="form.specifications = $event"
+			/>
+		</div>
+	</div>
+</p-card>

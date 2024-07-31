@@ -1,0 +1,22 @@
+<div
+    class=" text-1 shadow-lg bg-white text-greenlighten-1 mb-2 border-l-4 border-r-4 border-greenlighten-1 pl-5 rounded-md">
+    <div class="flex">
+        <div class=" breadcrumbs">
+            <ul>
+                <ng-container *ngIf="breadcrumbService.breadcrumbs$ | async as breadcrumbs; else loading">
+                    <li *ngFor="let breadcrumb of breadcrumbs; let last = last">
+                        <a *ngIf="!last && breadcrumb.url" [routerLink]="[breadcrumb.url]" class="">{{
+                            breadcrumb.label }}</a>
+                        <span *ngIf="last || !breadcrumb.url">{{ breadcrumb.label }}</span>
+                    </li>
+                </ng-container>
+            </ul>
+        </div>
+        <div class="ml-auto flex items-center justify-center bg-greenlighten-1 text-white px-5 text-1 ">
+            <p>{{ today | date:'EEEE, dd/MM/yyyy' }}</p>
+        </div>
+    </div>
+    <ng-template #loading>
+        <div>Loading...</div>
+    </ng-template>
+</div>

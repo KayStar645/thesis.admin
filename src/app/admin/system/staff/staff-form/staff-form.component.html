@@ -1,0 +1,135 @@
+<app-loading
+	[show]="addMutate.isPending() || updateMutate.isPending() || detailQuery.isFetching()"
+	[onTop]="true"
+/>
+
+<p-card>
+	<ng-template pTemplate="header">
+		<div class="px-4 pt-6 flex items-center gap-3">
+			<p class="font-bold text-2xl flex-1">{{ this.id() == 0 ? 'Thêm mới nhân viên' : 'Cập nhật nhân viên' }}</p>
+
+			<div
+				class="px-3 py-2 bg-green-500 hover:bg-green-600 text-white cursor-pointer rounded-md"
+				(click)="onSubmit()"
+			>
+				{{ this.id() == 0 ? 'Thêm mới' : 'Cập nhật' }}
+			</div>
+		</div>
+	</ng-template>
+
+	<div class="grid grid-cols-3 gap-5">
+		<app-input-text-component
+			name="internalCode"
+			label="Mã nhân viên"
+			placeholder="Mã nhân viên"
+			[required]="true"
+			[disabled]="this.id() > 0"
+			[value]="detailQuery.data()?.data?.internalCode"
+			[errorMessage]="errors()['internalCode']"
+			(onChange)="form.internalCode = $event"
+		/>
+
+		<app-input-text-component
+			name="name"
+			label="Tên nhân viên"
+			placeholder="Tên nhân viên"
+			[required]="true"
+			[value]="detailQuery.data()?.data?.name"
+			[errorMessage]="errors()['name']"
+			(onChange)="form.name = $event"
+		/>
+
+		<app-input-date-component
+			name="dateOfBirth"
+			label="Ngày sinh"
+			placeholder="Ngày sinh"
+			[required]="true"
+			[value]="detailQuery.data()?.data?.dateOfBirth"
+			[errorMessage]="errors()['dateOfBirth']"
+			(onChange)="form.dateOfBirth = $event.toDateString()"
+		/>
+
+		<div class="col-span-2">
+			<app-input-text-component
+				name="address"
+				label="Địa chỉ"
+				placeholder="Địa chỉ"
+				[required]="true"
+				[value]="detailQuery.data()?.data?.address"
+				[errorMessage]="errors()['address']"
+				(onChange)="form.address = $event"
+			/>
+		</div>
+
+		<app-input-text-component
+			name="phone-number"
+			label="Số điện thoại"
+			placeholder="Số điện thoại"
+			[required]="true"
+			[value]="detailQuery.data()?.data?.phoneNumber"
+			[errorMessage]="errors()['phoneNumber']"
+			(onChange)="form.phoneNumber = $event"
+		/>
+
+		<app-input-text-component
+			name="email"
+			label="Email"
+			placeholder="Email"
+			[required]="true"
+			[errorMessage]="errors()['email']"
+			[value]="detailQuery.data()?.data?.email"
+			(onChange)="form.email = $event"
+		/>
+
+		<app-input-select
+			label="Giới tính"
+			placeholder="Giới tính"
+			[required]="true"
+			[options]="[
+				{
+					label: 'Nữ',
+					value: 'Nữ'
+				},
+				{
+					label: 'Nam',
+					value: 'Nam'
+				}
+			]"
+			[value]="detailQuery.data()?.data?.gender"
+			[errorMessage]="errors()['gender']"
+			(onChange)="form.gender = $event"
+		/>
+
+		<app-input-dialog-select
+			label="Chức vụ"
+			placeholder="Chức vụ"
+			dialogHeader="Danh sách chức vụ"
+			api="position"
+			valueField="id"
+			labelField="name"
+			[value]="detailQuery.data()?.data?.positionId"
+			[required]="true"
+			[columns]="positionColumns"
+			[errorMessage]="errors()['positionId']"
+			(onChange)="form.positionId = $event.id"
+		/>
+
+		<app-input-text-component
+			label="Số CCCD"
+			placeholder="Số CCCD"
+			[required]="true"
+			[value]="detailQuery.data()?.data?.idCard"
+			[errorMessage]="errors()['idCard']"
+			(onChange)="form.idCard = $event"
+		/>
+
+		<div class="col-span-3">
+			<app-input-file-component
+				label="Ảnh nhân viên"
+				[folder]="id() > 0 ? 'staff/' + id() : 'staff/new'"
+				[value]="detailQuery.data()?.data?.avatar ? [detailQuery.data()?.data?.avatar!] : []"
+				(onChange)="form.avatar = $event[0] || ''"
+			/>
+		</div>
+	</div>
+</p-card>

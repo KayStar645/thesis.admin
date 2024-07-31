@@ -1,0 +1,20 @@
+<div *ngIf="data.shouldShow">
+	<a class="px-3 py-2 rounded-md hover:bg-greenlighten-1 hover:text-white cursor-pointer transition-colors flex items-center gap-3"
+		(click)="_onClick($event)" [routerLink]="data.to" routerLinkActive="menu-active">
+		<i *ngIf="data.icon" [ngClass]="data.icon"></i>
+
+		<p class="flex-1" [ngClass]="{
+				'font-semibold': data.options
+			}">
+			{{ data.label }}
+		</p>
+
+		<i *ngIf="data.options && !collapse" class="fa-solid fa-chevron-down text-xs"></i>
+
+		<i *ngIf="data.options && collapse" class="fa-solid fa-chevron-right text-xs"></i>
+	</a>
+
+	<div *ngIf="data.options && !collapse" class="ml-8 mt-0.5 flex flex-col gap-0.5">
+		<app-menu-item *ngFor="let item of data.options" [data]="item" [activeItem]="activeItem" />
+	</div>
+</div>

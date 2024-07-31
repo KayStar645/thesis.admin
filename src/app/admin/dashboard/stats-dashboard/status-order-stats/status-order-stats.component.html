@@ -1,0 +1,55 @@
+<div class=" w-full ">
+    <!-- <h2 class="text-2xl font-bold text-black text-center ">Danh sách đơn hàng</h2> -->
+
+    <div class="bg-white rounded-lg shadow-inner text-center p-4">
+        <app-loading [onTop]="true" [show]="orderQuery.isFetching()"></app-loading>
+
+        <div class="mb-4 flex justify-center items-center bg-slate-200 p-3">
+            <p-selectButton [options]="statuses.slice(1)" [(ngModel)]="id" [ngModelOptions]="{standalone: true}"
+                optionValue="id" [multiple]="false" optionLabel="label" (onChange)="loadProducts()"
+                styleClass="flex flex-wrap w-full">
+                <ng-template let-item>
+                    <span class="px-3 py-2 text-sm font-medium">{{item.label}}</span>
+                </ng-template>
+            </p-selectButton>
+        </div>
+        <p-table [value]="orderQuery.data()?.data || []" [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Hiển thị {first} đến {last} của {totalRecords} mục"
+            [rowsPerPageOptions]="[10,25,50]" styleClass="p-datatable-sm p-datatable-striped">
+            <ng-template pTemplate="header">
+                <tr class="bg-gray-100">
+                    <th class="text-left p-3 w-16">STT</th>
+                    <th class="text-left p-3">Mã</th>
+                    <th class="text-left p-3">Ngày tạo</th>
+                    <th class="text-center p-3">Tổng tiền</th>
+                    <th class="text-left p-3">Trạng thái</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-order let-i="rowIndex">
+                <tr class="hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
+                    (click)="showOrderDetail(order.id)">
+                    <td class="text-center p-3">{{i + 1}}</td>
+                    <td class="p-3">{{order.internalCode}}</td>
+                    <td class="p-3">{{order.date | date: 'dd/MM/yyyy'}}</td>
+                    <td class="p-3 text-center">{{order.totalAmount | currency:'VND':'symbol':'1.0-0'}}</td>
+                    <td class="p-3">
+                        <span
+                            class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none rounded-full"
+                            [ngClass]="getStatusClass(order.status)">
+                            {{getStatusLabel(order.status)}}
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="5" class="text-center p-4">
+                        Không có dữ liệu để hiển thị.
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+<app-order-detail-form dialogHeader="Chi tiết đơn hàng " [id]="code" [visible]="visible" valueField="id"
+    labelField="name" (dialogClose)="onDialogClose()" />

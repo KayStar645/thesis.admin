@@ -1,0 +1,80 @@
+<div class="grid grid-cols-2 gap-4 h-full">
+
+    <!-- Card 1 -->
+    <div class="bg-white shadow-md rounded-lg overflow-hidden flex cursor-pointer " (click)="toggleProductDialog()">
+        <!-- Ảnh (chiếm 5 phần) -->
+        <div class="bg-green-100 p-4 flex justify-center items-center col-span-5 w-50">
+            <img alt="Card" src="../../../../assets/images/dashboard/delivery-box.svg" class="w-15 h-auto" />
+        </div>
+
+        <!-- Nội dung (chiếm 7 phần) -->
+        <div class="p-4 col-span-7 flex flex-col justify-center">
+            <div class="text-xl font-bold mb-2">Sản phẩm</div>
+            <div class="text-gray-600 mb-1">
+                <h2 class="text-4xl text-green-500 font-bold py-2">{{ statsQuery.data()?.data?.itemTotal || 0 }}</h2>
+                Tổng số lượng sản phẩm tại cửa hàng
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-white shadow-md rounded-lg overflow-hidden flex  cursor-pointer " (click)="toggleCustomerDialog()">
+        <!-- Ảnh (chiếm 5 phần) -->
+        <div class="bg-orange-100 p-4 flex justify-center items-center col-span-5  w-50">
+            <img alt="Card" src="../../../../../assets/images/dashboard/service.svg" class="w-15 h-auto" />
+        </div>
+
+        <!-- Nội dung (chiếm 7 phần) -->
+        <div class="p-4 col-span-7 flex flex-col justify-center">
+            <div class="text-xl font-bold mb-2">Khách hàng</div>
+            <div class="text-gray-600 mb-1">
+                <h2 class="text-4xl text-yellow-500 font-bold py-2">{{ statsQuery.data()?.data?.customerTotal || 0 }}
+                </h2>
+                Số lượng khách hàng hiện tại siêu thị
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-white shadow-md rounded-lg overflow-hidden flex  cursor-pointer " (click)="toggleOutOfStockDialog()">
+        <!-- Ảnh (chiếm 5 phần) -->
+        <div class="bg-red-100 p-4 flex justify-center items-center col-span-5 w-50">
+            <img alt="Card" src="../../../../../assets/images/dashboard/exclamation.svg" class="w-15 h-auto" />
+        </div>
+
+        <!-- Nội dung (chiếm 7 phần) -->
+        <div class="p-4 col-span-7 flex flex-col justify-center">
+            <div class="text-xl font-bold mb-2">Hết hàng</div>
+            <div class="text-gray-600 mb-1">
+                <h2 class="text-4xl text-red-500 font-bold py-2">{{ statsQuery.data()?.data?.outStock || 0 }}</h2>
+                Tổng số lượng sản phẩm hết hàng!
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Card 4 -->
+    <div class="bg-white shadow-md rounded-lg overflow-hidden flex  cursor-pointer">
+        <!-- Ảnh (chiếm 5 phần) -->
+        <div class="bg-violet-200 p-4 flex justify-center items-center col-span-5 w-50">
+            <img alt="Card" src="../../../../../assets/images/dashboard/order.svg" class="w-15 h-auto" />
+        </div>
+
+        <!-- Nội dung (chiếm 7 phần) -->
+        <div class="p-4 col-span-7 flex flex-col justify-center">
+            <div class="text-xl font-bold mb-2">Đơn hàng</div>
+            <div class="text-gray-600 mb-1">
+                <h2 class="text-4xl text-violet-500 font-bold py-2">{{ statsQuery.data()?.data?.orderTotal || 0 }}</h2>
+                Tổng các số lượng đơn hàng đã bán
+            </div>
+        </div>
+    </div>
+
+</div>
+<app-input-dialog dialogHeader="Danh sách sản phẩm" api="product" filters="quantity==0" [visible]="visibleOutOfStock"
+    dataDisplay="table" valueField="id" labelField="name" [columns]="productPopupColumns"
+    (dialogClose)="onDialogClose()" />
+<app-input-dialog dialogHeader="Danh sách sản phẩm" api="product" [visible]="visibleProduct" dataDisplay="table"
+    valueField="id" labelField="name" [columns]="productPopupColumns" (dialogClose)="onDialogClose()" />
+<app-input-dialog dialogHeader="Danh sách khách hàng" api="customer" [visible]="visibleCustomer" dataDisplay="table"
+    valueField="id" labelField="name" [columns]="customerColumns" (dialogClose)="onDialogClose()" />

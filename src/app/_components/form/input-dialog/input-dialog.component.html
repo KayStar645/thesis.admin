@@ -1,0 +1,7 @@
+<p-dialog [header]="dialogHeader" [(visible)]="visible" [modal]="true"
+    [style]="{ width: dialogWidth, minHeight: '50vh' }" [closable]="true" (onHide)="closeDialog()">
+    <app-generic-table-component [data]=" this.data" [customColumns]="columns" [customCol]="true"
+        [isShowAllDelete]="false" [isShowEditRemove]="false" [isShowUpdate]="false" [isCheckBox]="false"
+        [isShowCheckBox]="false" [pageSize]="pagination().pageSize!" [currentPage]="pagination().currentPage"
+        [isRadio]="false" [totalCount]="pagination().totalCount" (pageChange)="onPageChange($event)" />
+</p-dialog>

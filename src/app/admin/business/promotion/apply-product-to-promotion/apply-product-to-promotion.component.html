@@ -1,0 +1,40 @@
+<div class="flex items-center justify-between mb-3">
+	<p class="text-sm">Áp dụng cho sản phẩm <span class="text-red-500">*</span></p>
+
+	<div
+		class="px-3 py-2 text-sm text-white bg-green-600 hover:bg-green-700 rounded-md cursor-pointer"
+		(click)="onAddGroup()"
+	>
+		Thêm nhóm
+	</div>
+</div>
+
+<p-accordion
+	[multiple]="true"
+	styleClass="flex flex-col gap-4"
+>
+	<p-accordionTab
+		*ngFor="let item of data"
+		headerStyleClass="px-3 py-4 border border-gray-200"
+		iconPos="end"
+		contentStyleClass="p-0"
+	>
+		<ng-template pTemplate="header">
+			<p class="text-sm">Nhóm sản phẩm thứ {{ item.index! + 1 }}</p>
+		</ng-template>
+
+		<div class="border border-gray-200 border-t-0 p-4 rounded-b-md">
+			<app-input-dialog-select-multi
+				placeholder="Áp dụng cho sản phẩm thứ {{ item.index! + 1 }}"
+				dialogHeader="Danh sách sản phẩm"
+				api="product"
+				dataDisplay="table"
+				valueField="id"
+				labelField="name"
+				[columns]="productColumns2"
+				[value]="item.groupProducts"
+				(onChange)="onUpdateGroup($event, item.index!)"
+			/>
+		</div>
+	</p-accordionTab>
+</p-accordion>

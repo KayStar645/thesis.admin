@@ -1,0 +1,74 @@
+<app-loading
+	[show]="loginMutate.isPending()"
+	[onTop]="true"
+/>
+
+<div class="bg-light min-h-screen overscroll-none py-14">
+	<div
+		class="flex items-center justify-center h-[70vh] lg:h-[80vh] mx-auto max-w-xs lg:max-w-4xl flex-nowrap shadow-2xl bg-white rounded-xl p-2"
+	>
+		<div class="hidden lg:block lg:w-1/2 bg-cover p-2">
+			<img
+				src="assets/images/login/panel.jpg"
+				alt=""
+				class="max-h-[22rem] w-full"
+			/>
+		</div>
+		<div class="w-full lg:w-1/2 my-auto mx-auto space-y-10 lg:space-y-20">
+			<div class="w-full flex items-center mt-[-3rem] lg:mt-[-14rem] justify-center">
+				<div class="h-[5rem] w-[5rem] lg:w-36 lg:h-36 rounded-full bg-white mx-auto">
+					<img
+						class="rounded-full my-auto mx-auto"
+						src="assets/images/login/logo.jpg"
+					/>
+				</div>
+			</div>
+
+			<div class="mt-2 lg:mt-10 space-y-8 lg:space-y-10">
+				<div class="flex items-center justify-center space-x-7 px-5">
+					<i class="fa-solid fa-circle-user text-green-lighten-1 fa-xl"></i>
+					<input
+						type="text"
+						[(ngModel)]="username"
+						class="outline-none border-b-4 rounded-md border-green-300 ms-6 w-4/5 p-1 text-xs lg:text-xl"
+					/>
+				</div>
+
+				<div class="flex items-center justify-center space-x-7 px-5">
+					<i class="fa-solid fa-key text-green-lighten-1 fa-xl"></i>
+					<input
+						[type]="showPassword ? 'text' : 'password'"
+						[(ngModel)]="password"
+						class="outline-none rounded-md bg-white border-b-4 border-green-300 ms-6 w-4/5 p-1 text-sm lg:text-xl"
+					/>
+
+					<!-- <i ngIf="showPassword == false;" 
+                      (click)="togglePasswordVisibility()"
+                      class="fa-solid fa-eye fa-lg text-green-lighten-1 
+                            absolute top-1/2 right-2 transform -translate-y-1/2 -translate-x-[30px] cursor-pointer"
+                    ></i>
+              
+                    <i ngIf="showPassword"
+                      #noShowPassword (click)="togglePasswordVisibility()"
+                      class="fa-solid fa-eye-slash fa-lg text-green-lighten-1
+                      absolute top-1/2 right-2 transform -translate-y-1/2 -translate-x-[28.8px] cursor-pointer"
+                    ></i> -->
+				</div>
+
+				<div class="flex items-center justify-center space-x-7 px-5">
+					<button
+						class="bg-light text-white px-6 py-2 w-1/2 text-center rounded-md text-sm lg:text-xl outline-none hover:bg-gray-600"
+						(click)="Login()"
+					>
+						Đăng nhập
+					</button>
+				</div>
+				<!-- <div class="m-6 mt-16 text-center">
+                    <button class="bg-light text-white py-2 px-8 rounded-md outline-none"
+                        (click)="GoogleLogin()"
+                    >Google</button>
+                </div> -->
+			</div>
+		</div>
+	</div>
+</div>
